@@ -62,7 +62,7 @@ The included contributor skill can be read without installing it into an agent p
 
 ## CI and trust
 
-CI runs on main-branch pushes and explicit maintainer dispatches, with a pinned checkout and read-only repository permission. Automatic pull-request execution is deliberately disabled for this first version. A PR must not be able to replace its own validator or CI commands; we also preserve GitHub's default protections against privileged checkout of untrusted forks rather than opting out of them.
+CI runs on pushes to main and explicitly maintainer-owned `maintainer/**` branches, plus maintainer dispatches, with a pinned checkout and read-only repository permission. Automatic pull-request execution is deliberately disabled. Fork contributions are validated as data before a maintainer imports reviewed changes to an owned branch; never push unreviewed fork code or CI definitions there. This preserves GitHub's protections against privileged checkout of untrusted forks.
 
 Before accepting a PR, a maintainer runs the validator from an existing trusted base copy against the proposed files, without running candidate programs, tests, build tools, or dependency installers:
 
@@ -70,7 +70,7 @@ Before accepting a PR, a maintainer runs the validator from an existing trusted 
 python3 -I tools/catalog.py check --root /path/to/proposed-copy
 ```
 
-Python `-I` keeps candidate modules and `PYTHONPATH` out of trusted imports. Changes to tooling and CI require separate code review. Main-branch tests run only after acceptance, or on a revision explicitly reviewed and dispatched by a maintainer. There is no deployment, cache, write token, or secret supplied by this workflow. Branch protection and actual GitHub CI remain unverified until publication and configuration.
+Python `-I` keeps candidate modules and `PYTHONPATH` out of trusted imports. Changes to tooling and CI require separate code review. Tests run only on accepted main code or a revision explicitly reviewed and pushed/dispatched by a maintainer. There is no deployment, cache, write token, or secret supplied by this workflow. Protected main requires the `validate-data` check, disallows force pushes/deletion, and requires a PR. Use an owned branch's push run for PR checks; a manually dispatched run may not attach to the PR's check rollup.
 
 See GitHub's [event trust boundaries](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows#pull_request_target) and [privileged checkout protections](https://docs.github.com/en/actions/reference/security/securely-using-pull_request_target). Automatic PR checks can be designed separately without weakening those controls.
 

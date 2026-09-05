@@ -16,7 +16,7 @@ class CIPolicyTests(unittest.TestCase):
         text = (ROOT / '.github/workflows/validate.yml').read_text()
         self.assertRegex(text, r'(?m)^  workflow_dispatch:$')
         self.assertNotRegex(text, r'(?m)^  pull_request(?:_target)?:$')
-        self.assertIn('branches: [main]', text)
+        self.assertIn('branches: [main, "maintainer/**"]', text)
         self.assertIn('contents: read', text)
         self.assertNotIn('contents: write', text)
         self.assertNotIn('allow-unsafe-pr-checkout', text)
