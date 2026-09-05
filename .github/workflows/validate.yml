@@ -1,0 +1,27 @@
+name: Validate maintained library
+on:
+  # Automatic PR execution is intentionally absent. Maintainers validate
+  # candidate workflow data locally with the trusted base validator.
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  validate-data:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Check out maintainer-authorized revision
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.sha }}
+          path: trusted
+          persist-credentials: false
+      - name: Validate workflow data
+        run: python3 -I trusted/tools/catalog.py check --root trusted
+      - name: Test and build maintained code
+        working-directory: trusted
+        run: |
+          python3 -m unittest discover -s tests -v
+          python3 tools/build.py

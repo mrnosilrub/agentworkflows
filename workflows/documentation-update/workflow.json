@@ -1,0 +1,30 @@
+{
+  "id": "documentation-update",
+  "title": "Propose documentation updates",
+  "summary": "Trace a code change into the documentation it affects and prepare a reviewable patch.",
+  "version": "0.1.0",
+  "category": "development",
+  "tags": [
+    "development",
+    "documentation"
+  ],
+  "requirements": [
+    "Read access to a local Git repository",
+    "Git diff and a text editor",
+    "Project-documented checks, reviewed before running"
+  ],
+  "permissions": [
+    "Read the selected repository",
+    "Edit documentation on a separate branch only after approval"
+  ],
+  "outputs": [
+    "A proposed documentation patch",
+    "A note mapping each edit to the code change"
+  ],
+  "authors": [
+    "AgentWorkflows seed contribution (AI-assisted)"
+  ],
+  "license": "MIT",
+  "status": "draft",
+  "evidence": null
+}

@@ -1,0 +1,25 @@
+{
+  "id": "your-task-name",
+  "title": "Describe the job",
+  "summary": "Explain the useful result in one sentence.",
+  "version": "0.1.0",
+  "category": "operations",
+  "tags": [
+    "operations"
+  ],
+  "requirements": [
+    "List the tools needed"
+  ],
+  "permissions": [
+    "List the access required"
+  ],
+  "outputs": [
+    "Describe the output"
+  ],
+  "authors": [
+    "Replace with your accountable attribution"
+  ],
+  "license": "MIT",
+  "status": "draft",
+  "evidence": null
+}

@@ -1,0 +1,29 @@
+{
+  "id": "release-notes-digest",
+  "title": "Prepare a release-notes digest",
+  "summary": "Compare release notes with what you have already seen, then draft a sourced update for review.",
+  "version": "0.1.0",
+  "category": "research",
+  "tags": [
+    "research",
+    "release-notes"
+  ],
+  "requirements": [
+    "Read local files or explicitly approved public release notes",
+    "Write a local draft"
+  ],
+  "permissions": [
+    "Read selected release sources",
+    "Write only the chosen output folder"
+  ],
+  "outputs": [
+    "A digest of unseen releases",
+    "A list of changes needing human attention"
+  ],
+  "authors": [
+    "AgentWorkflows seed contribution (AI-assisted)"
+  ],
+  "license": "MIT",
+  "status": "draft",
+  "evidence": null
+}
