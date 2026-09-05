@@ -48,6 +48,7 @@ class ReleaseTests(unittest.TestCase):
             self.assertIn('property="og:url" content="https://agentworkflows.wiki' + route + '"', html)
             self.assertNotIn('noindex', html)
         self.assertIn('noindex', (dist / '404.html').read_text())
+        self.assertTrue((dist / 'robots.txt').read_text().startswith('# AgentWorkflows public library\n'))
         self.assertIn('Sitemap: https://agentworkflows.wiki/sitemap.xml', (dist / 'robots.txt').read_text())
         # Parse only our generated offline sitemap, never contributor XML.
         sitemap = ET.parse(dist / 'sitemap.xml')

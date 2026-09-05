@@ -158,7 +158,7 @@ def _release_metadata(dist, production):
             html = html.replace('</head>', '<link rel="canonical" href="' + origin + route + '"></head>', 1)
             path.write_text(html, encoding='utf-8')
     if production:
-        (dist / 'robots.txt').write_text('User-agent: *\nAllow: /\nSitemap: ' + origin + '/sitemap.xml\n', encoding='utf-8')
+        (dist / 'robots.txt').write_text('# AgentWorkflows public library\nUser-agent: *\nAllow: /\nSitemap: ' + origin + '/sitemap.xml\n', encoding='utf-8')
         (dist / 'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' + ''.join('<url><loc>' + url + '</loc></url>' for url in routes) + '</urlset>\n', encoding='utf-8')
     headers = "/*\n  Content-Security-Policy: default-src 'none'; style-src 'self'; script-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: no-referrer\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n  Cache-Control: public, max-age=0, must-revalidate\n"
     if not production:
