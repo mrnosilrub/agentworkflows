@@ -49,7 +49,9 @@ try{
   }
   // Sweep every generated reading route, also without JavaScript.
   const catalog=await (await fetch(base+'/catalog.json')).json();
-  for(const route of ['/', '/contribute/', ...catalog.workflows.map(w=>w.page_url), '/404.html']){
+  const demoRoutes = catalog.workflows.some(w => (w.example_urls || []).some(url => url.endsWith('/real-run.md')))
+    ? ['/examples/release-notes-digest/'] : [];
+  for(const route of ['/', '/contribute/', ...demoRoutes, ...catalog.workflows.map(w=>w.page_url), '/404.html']){
     const page=await browser.newPage();await page.setCacheEnabled(false);
     const violations=[];
     page.on('console',m=>{if(m.type()==='error')violations.push(m.text());});

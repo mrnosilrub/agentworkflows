@@ -3,7 +3,8 @@ on:
   # Automatic PR execution is intentionally absent. Maintainers validate
   # candidate workflow data locally with the trusted base validator.
   push:
-    branches: [main]
+    # Only maintainers can push these branches in the source repository.
+    branches: [main, "maintainer/**"]
   workflow_dispatch:
 permissions:
   contents: read

@@ -19,6 +19,7 @@ class BuildTests(unittest.TestCase):
                 shutil.copytree(ROOT / name, self.root / name)
         for name in ('LICENSE', 'CONTRIBUTING.md', 'site.json'):
             shutil.copy2(ROOT / name, self.root / name)
+        (self.root / 'site.json').write_text(json.dumps({'repository_url': None}))
 
     def build(self):
         return subprocess.run([sys.executable, str(ROOT / 'tools/build.py'), '--root', str(self.root)],
@@ -96,6 +97,22 @@ class BuildTests(unittest.TestCase):
         entry = next(w for w in data['workflows'] if w['id'] == 'documentation-update')
         self.assertIn('/workflows/documentation-update/examples/extra%20notes.md', entry.get('example_urls', []))
 
+
+    def test_public_walkthrough_is_rendered_from_validated_example(self):
+        source = self.root / 'workflows/release-notes-digest/examples/real-run.md'
+        source.write_text('# A real release digest\n\nA bounded run, not certification.\n')
+        result = self.build()
+        self.assertEqual(result.returncode, 0, result.stderr)
+        page = self.root / 'dist/examples/release-notes-digest/index.html'
+        self.assertIn('<h1>A real release digest</h1>', page.read_text())
+        self.assertIn('/examples/release-notes-digest/', (self.root / 'dist/index.html').read_text())
+        self.assertIn('/examples/release-notes-digest/', (self.root / 'dist/workflows/release-notes-digest/index.html').read_text())
+
+    def test_build_preserves_binary_share_card_bytes(self):
+        image = b'\x89PNG\r\n\x1a\n\xff\x00binary-test-fixture'
+        (self.root / 'assets/share-card.png').write_bytes(image)
+        self.assertEqual(self.build().returncode, 0)
+        self.assertEqual((self.root / 'dist/assets/share-card.png').read_bytes(), image)
 
     def test_build_does_not_publish_unlisted_support_files(self):
         (self.root / 'assets/private-note.txt').write_text('not a public asset')
