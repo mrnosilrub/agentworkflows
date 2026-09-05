@@ -44,6 +44,27 @@ class BuildTests(unittest.TestCase):
         self.assertFalse((self.root / 'dist/workflows/documentation-update').exists())
 
 
+    def test_exported_support_symlinks_are_rejected_without_losing_output(self):
+        self.assertEqual(self.build().returncode, 0)
+        before = (self.root / 'dist/index.html').read_bytes()
+        outside = self.root / 'private.txt'
+        outside.write_text('PRIVATE-SENTINEL')
+        for relative in ('assets/site.js', 'CONTRIBUTING.md', 'templates/workflow/SKILL.md', 'skills/contribute-agentworkflows/SKILL.md'):
+            with self.subTest(relative=relative):
+                path = self.root / relative
+                original = path.read_bytes()
+                path.unlink()
+                path.symlink_to(outside)
+                result = self.build()
+                self.assertNotEqual(result.returncode, 0)
+                self.assertEqual((self.root / 'dist/index.html').read_bytes(), before)
+                path.unlink()
+                path.write_bytes(original)
+        assets = self.root / 'assets'
+        assets.rename(self.root / 'moved-assets')
+        assets.symlink_to(self.root / 'moved-assets', target_is_directory=True)
+        self.assertNotEqual(self.build().returncode, 0)
+
     def test_build_preserves_unowned_output_directory(self):
         (self.root / 'dist').mkdir()
         (self.root / 'dist/keep.txt').write_text('unrelated work')

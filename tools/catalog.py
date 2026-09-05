@@ -153,8 +153,12 @@ def _string_list(value: Any, *, nonempty: bool) -> bool:
 
 
 def _validate_metadata(metadata: Any, path: Path, directory_name: str) -> None:
-    if not isinstance(metadata, dict) or set(metadata) != set(_METADATA_KEYS):
-        raise ValueError(f"invalid metadata keys in {path}")
+    if not isinstance(metadata, dict):
+        raise ValueError(f"metadata must be a JSON object in {path}")
+    if set(metadata) != set(_METADATA_KEYS):
+        missing = ', '.join(sorted(set(_METADATA_KEYS) - set(metadata))) or 'none'
+        extra = ', '.join(sorted(set(metadata) - set(_METADATA_KEYS))) or 'none'
+        raise ValueError(f"invalid metadata keys in {path}; missing: {missing}; unexpected: {extra}")
 
     workflow_id = metadata["id"]
     if not isinstance(workflow_id, str) or not _ID_PATTERN.fullmatch(workflow_id):

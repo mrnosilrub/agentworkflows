@@ -5,6 +5,7 @@ Synthetic fixture only; not real release information.
 ## sample-v1.1
 
 Source: Synthetic snapshot B in this fixture.
+Source coverage: complete for the supplied fictional snapshot; no external notes were fetched.
 
 - New: a preview-only mode that makes no writes.
 - Compatibility change: --timeout is now --request-timeout.

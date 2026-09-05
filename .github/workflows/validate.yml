@@ -25,3 +25,8 @@ jobs:
         run: |
           python3 -m unittest discover -s tests -v
           python3 tools/build.py
+      - name: Rehearse production build without publishing
+        working-directory: trusted
+        # Builds --production in isolated fixtures, verifies every canonical
+        # and exact sitemap set, then verifies return to noindex preview.
+        run: python3 -m unittest discover -s tests -p test_release.py -v

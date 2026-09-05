@@ -47,6 +47,27 @@ try{
     results.push({width,workflow_count:total,search:'pass',...state,errors,external});
     await page.close();
   }
+  // Sweep every generated reading route, also without JavaScript.
+  const catalog=await (await fetch(base+'/catalog.json')).json();
+  for(const route of ['/', '/contribute/', ...catalog.workflows.map(w=>w.page_url), '/404.html']){
+    const page=await browser.newPage();await page.setCacheEnabled(false);
+    const violations=[];
+    page.on('console',m=>{if(m.type()==='error')violations.push(m.text());});
+    page.on('pageerror',e=>violations.push(e.message));
+    const response=await page.goto(base+route,{waitUntil:'networkidle0'});
+    assert.equal(response.status(),200);
+    if(process.env.REQUIRE_RELEASE_HEADERS){
+      assert.match(response.headers()['content-security-policy'],/frame-ancestors 'none'/);
+      assert.equal(response.headers()['x-content-type-options'],'nosniff');
+    }
+    assert.equal(await page.$$eval('h1',xs=>xs.length),1);
+    assert.deepEqual(violations,[]);
+    await page.setJavaScriptEnabled(false);
+    await page.reload({waitUntil:'networkidle0'});
+    assert.equal(await page.$$eval('h1',xs=>xs.length),1);
+    assert.ok((await page.$eval('main',e=>e.textContent)).trim().length>20);
+    await page.close();
+  }
   await fs.writeFile('.local/qa/browser.json',JSON.stringify(results,null,2)+'\n');
   console.log(JSON.stringify(results,null,2));
 }finally{await browser.close();}

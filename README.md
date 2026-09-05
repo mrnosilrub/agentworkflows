@@ -8,7 +8,7 @@ This checkout contains a working static website, generated JSON catalog, contrib
 
 ## Run locally
 
-Requires Python 3.9 or newer. The core has no third-party dependencies.
+Requires Python 3.9 or newer. The core has no third-party dependencies. Rebuilding over an existing dist uses macOS/Linux atomic directory exchange; if the OS or filesystem does not support it, the build fails without moving the old output. Use a fresh checkout on other platforms. The macOS path is exercised locally; Linux execution still requires the maintained CI run.
 
 ```sh
 python3 tools/build.py && python3 -m http.server 8788 --bind 127.0.0.1 --directory dist
@@ -76,11 +76,11 @@ The site itself needs no Node packages. The browser QA script needs Node, Chrome
 PUPPETEER_MODULE=/absolute/path/to/puppeteer-core/lib/puppeteer/puppeteer-core.js CHROME_PATH=/absolute/path/to/chrome node tests/browser.mjs
 ```
 
-It exercises the HTTP preview on port 8788 and saves local-only evidence under .local/qa. The clipboard-denial branch is deliberately injected; ordinary copy uses the browser's clipboard API.
+It exercises the HTTP preview on port 8788 (or PREVIEW_URL) and saves local-only evidence under .local/qa. With the same environment variables, `python3 tests/release_browser.py` creates an isolated production-mode build with an explicitly synthetic repository URL and applies the generated headers to a temporary loopback server. It checks exported bytes, private-path 404s, all reading routes with and without JavaScript, and desktop/mobile interactions. This is not proof of Cloudflare behavior or a public repository. The clipboard-denial branch is deliberately injected; ordinary copy uses the browser's clipboard API.
 
 ## Publication
 
-No deploy pipeline is connected. Only dist is a candidate static release tree; do not upload the repository root, .git, tests, or local evidence as a website. The site stays noindex in this local build. Review and authorize public repository creation and domain deployment separately before changing that state.
+No deploy pipeline is connected. Only dist is a candidate static release tree; do not upload the repository root, .git, tests, or local evidence as a website. Ordinary builds remain noindex. After verifying and configuring the actual public GitHub repository URL in site.json, `python3 tools/build.py --production` generates indexable pages, canonical links, a sitemap and Cloudflare security headers. That command only builds files; it does not publish them. Public repository creation and domain cutover still require owner authorization and external verification.
 
 ## License
 

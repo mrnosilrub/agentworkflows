@@ -2,7 +2,7 @@
   "id": "release-notes-digest",
   "title": "Prepare a release-notes digest",
   "summary": "Compare release notes with what you have already seen, then draft a sourced update for review.",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "category": "research",
   "tags": [
     "research",

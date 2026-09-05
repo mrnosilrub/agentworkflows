@@ -165,6 +165,20 @@ Stop when sources are unavailable.
             with self.assertRaisesRegex(ValueError, r"keys.*workflow\.json"):
                 load_workflows(root)
 
+    def test_metadata_key_error_names_missing_and_extra_fields(self) -> None:
+        with tempfile.TemporaryDirectory() as temporary_directory:
+            root = Path(temporary_directory)
+            self._write_valid_workflow(root)
+            path = root / "workflows" / "research-notes" / "workflow.json"
+            metadata = json.loads(path.read_text())
+            del metadata["permissions"]
+            metadata["invented"] = True
+            path.write_text(json.dumps(metadata))
+            with self.assertRaises(ValueError) as caught:
+                load_workflows(root)
+            self.assertIn("missing: permissions", str(caught.exception))
+            self.assertIn("unexpected: invented", str(caught.exception))
+
     def test_rejects_malformed_metadata_with_path_error(self) -> None:
         with tempfile.TemporaryDirectory() as temporary_directory:
             root = Path(temporary_directory)
