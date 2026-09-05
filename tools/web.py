@@ -1,5 +1,22 @@
 """Static presentation. Contributed Markdown is text, never HTML/code."""
 from html import escape
+import re
+
+
+def inline(text):
+    """A small escaped subset: code spans and explicit HTTPS/local links."""
+    tokens = re.compile(r'`([^`\n]+)`|\[([^\]\n]+)\]\((https://[^\s()<>"\\]+|/(?!/)[^\s()<>"\\]*)\)')
+    parts, end = [], 0
+    for match in tokens.finditer(text):
+        parts.append(escape(text[end:match.start()]))
+        code, label, url = match.groups()
+        if code is not None:
+            parts.append('<code>' + escape(code) + '</code>')
+        else:
+            parts.append('<a href="' + escape(url, quote=True) + '">' + escape(label) + '</a>')
+        end = match.end()
+    parts.append(escape(text[end:]))
+    return ''.join(parts)
 
 
 SITE_ORIGIN = 'https://agentworkflows.wiki'
@@ -105,7 +122,7 @@ def workflow_page(item, repository_url=None, demo_url=None):
 def markdown(text):
     """Small documented subset: headings, paragraphs, lists, fenced code.
 
-    Raw HTML and Markdown links stay escaped text. No external renderer/plugins.
+    Raw HTML stays escaped; only HTTPS/local links and code spans are active.
     """
     import re
     lines = text.splitlines()
@@ -116,13 +133,13 @@ def markdown(text):
 
     def flush_paragraph():
         if paragraph:
-            out.append('<p>' + escape(' '.join(paragraph)) + '</p>')
+            out.append('<p>' + inline(' '.join(paragraph)) + '</p>')
             paragraph.clear()
 
     def flush_list():
         nonlocal list_tag
         if items:
-            out.append('<' + list_tag + '>' + ''.join('<li>' + escape(x) + '</li>' for x in items) + '</' + list_tag + '>')
+            out.append('<' + list_tag + '>' + ''.join('<li>' + inline(x) + '</li>' for x in items) + '</' + list_tag + '>')
             items.clear()
         list_tag = None
 
@@ -145,7 +162,7 @@ def markdown(text):
             level = min(len(line) - len(line.lstrip('#')), 6)
             # A workflow's own H1 is subordinate to the page's title.
             level = max(2, level)
-            out.append('<h{0}>{1}</h{0}>'.format(level, escape(line.lstrip('#').strip())))
+            out.append('<h{0}>{1}</h{0}>'.format(level, inline(line.lstrip('#').strip())))
         elif line.startswith('- ') or re.match(r'^\d+\. ', line):
             flush_paragraph()
             kind = 'ul' if line.startswith('- ') else 'ol'

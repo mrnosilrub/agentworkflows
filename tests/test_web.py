@@ -12,6 +12,18 @@ class RenderingTests(unittest.TestCase):
                          '<p>&lt;script&gt;alert(1)&lt;/script&gt;</p>')
 
 
+    def test_inline_code_and_links_are_rendered_without_executing_html(self):
+        rendered = web.markdown('Use `a < b` and [the source](https://example.com/notes?a=1&b=2). [Local](/contribute/).')
+        self.assertIn('<code>a &lt; b</code>', rendered)
+        self.assertIn('<a href="https://example.com/notes?a=1&amp;b=2">the source</a>', rendered)
+        self.assertIn('<a href="/contribute/">Local</a>', rendered)
+        unsafe = web.markdown('[bad](javascript:alert) [bad](//evil.example) [bad](data:text/html) <script>alert(1)</script>')
+        self.assertNotIn('<a ', unsafe)
+        self.assertNotIn('<script>', unsafe)
+        self.assertIn('&lt;script&gt;', unsafe)
+        literal = web.markdown('```\n[source](https://example.com)\n```')
+        self.assertNotIn('<a ', literal)
+
     def test_markdown_handles_document_structure(self):
         result = web.markdown('---\nname: sample\ndescription: sample\n---\n\n## Steps\n\n- Read\n- Check\n\n```sh\n<do-not-execute>\n```')
         self.assertIn('<h2>Steps</h2>', result)
