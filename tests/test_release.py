@@ -32,6 +32,7 @@ class ReleaseTests(unittest.TestCase):
         self.assertIn('X-Robots-Tag: noindex, nofollow', (self.root / 'dist/_headers').read_text())
 
     def test_production_has_canonical_discovery_and_headers(self):
+        (self.root / 'workflows/release-notes-digest/examples/real-run.md').write_text('# A real run\n\nHistorical sources; human review required.\n')
         (self.root / 'site.json').write_text(json.dumps({'repository_url': 'https://github.com/example/workflows'}))
         result = subprocess.run([sys.executable, str(ROOT / 'tools/build.py'), '--root', str(self.root), '--production'], capture_output=True, text=True)
         self.assertEqual(result.returncode, 0, result.stderr)
@@ -44,6 +45,7 @@ class ReleaseTests(unittest.TestCase):
             urls.append('https://agentworkflows.wiki' + route)
             self.assertIn('rel="canonical" href="https://agentworkflows.wiki' + route + '"', html)
             self.assertEqual(html.count('rel="canonical"'), 1)
+            self.assertIn('property="og:url" content="https://agentworkflows.wiki' + route + '"', html)
             self.assertNotIn('noindex', html)
         self.assertIn('noindex', (dist / '404.html').read_text())
         self.assertIn('Sitemap: https://agentworkflows.wiki/sitemap.xml', (dist / 'robots.txt').read_text())

@@ -9,4 +9,4 @@ This repository is a library, not an execution service. workflows/ contains untr
 - Do not hand-edit dist. It is generated from workflows/, assets/, templates/, and the public contribution documentation.
 - Keep README, machine catalog, and web content grounded in the same files. Status declarations are not security certification.
 - User-facing copy should explain the job, not expose internal review bureaucracy. Put evidence details behind clear links.
-- Publication and remote repository creation require owner approval; this initial working tree has no public remote.
+- Source repository: https://github.com/mrnosilrub/agentworkflows. Publication, deployment and sending still require the operator's authorization; contributing does not grant any of those permissions.

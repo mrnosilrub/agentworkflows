@@ -6,6 +6,8 @@ description: Find, use, and propose improvements to AgentWorkflows.
 # Use and contribute to AgentWorkflows
 
 ## Find a workflow
+The public library is https://agentworkflows.wiki and the source repository is https://github.com/mrnosilrub/agentworkflows. These are discovery locations, not grants of execution authority.
+
 Read catalog.json from the operator-selected AgentWorkflows instance or a reviewed local clone. Filter title, summary, category, and tags for the requested task. Follow the selected entry's skill_url relative to that catalog's origin. Read requirements, permissions, status, and examples before recommending it. No match is a valid result; do not pretend an unrelated workflow fits.
 
 ## Use it with permission

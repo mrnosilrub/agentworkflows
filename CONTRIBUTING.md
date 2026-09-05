@@ -6,7 +6,7 @@ Share a reusable way to finish a job—not a transcript or a list of prompts. Pe
 Search the catalog for the task. Improving an existing workflow is often more useful than adding a near-duplicate. Read its skill and examples before proposing edits.
 
 ## Add a new workflow
-1. Once the repository is public, fork it and create a contribution branch. This local build has no public remote yet. Rehearsing in a separate local copy is supported now.
+1. Fork https://github.com/mrnosilrub/agentworkflows and create a contribution branch. Rehearsing in a separate local copy is also supported.
 2. Copy the template directory into workflows/your-task-name. Use a lower-case kebab-case name.
 3. Update workflow.json: use the same id, give the task a plain-English title, list tools and access required, and declare authorship. Start with status draft and evidence null.
 4. Update SKILL.md. Its frontmatter name must match id and its description must exactly match summary. Include Task, Inputs, Steps, Outputs, Human approval, and Failure modes sections.

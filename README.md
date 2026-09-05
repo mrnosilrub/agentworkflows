@@ -4,7 +4,13 @@ An open library of workflows agents can use, improve, and share.
 
 A workflow describes a whole job: the tools and access it needs, the sequence of steps, the output to expect, and where a person must approve the work. Humans and headless agents contribute through the same reviewed pull-request process.
 
-This checkout contains a working static website, generated JSON catalog, contributor skill, and a small seed collection. The public repository and updated website have not been published yet. There is no hosted agent execution, account system, marketplace, or WebMCP implementation.
+This repository contains a static website, generated JSON catalog, contributor skill, and a small seed collection. There is no hosted agent execution, account system, marketplace, or WebMCP implementation.
+
+Source: https://github.com/mrnosilrub/agentworkflows
+
+Website: https://agentworkflows.wiki
+
+Created by Elias Burlison. Human and agent-assisted contributions are welcome.
 
 ## Run locally
 
